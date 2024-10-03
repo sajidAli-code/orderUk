@@ -59,8 +59,5 @@ coverage/
 *.coveralls.yml
 *.nyc_output/
 
-# Ignore GitHub Actions related files
-.github/
-
 # Ignore macOS-specific files
 Thumbs.db
