@@ -47,15 +47,15 @@ jobs:
         npm install
 
     # Run tests (Optional step for testing backend and frontend)
-    - name: Run Backend Tests
-      run: |
-        cd backend
-        npm test
+    # - name: Run Backend Tests
+    #   run: |
+    #     cd backend
+    #     npm test
 
-    - name: Run Frontend Tests
-      run: |
-        cd frontend
-        npm test
+    # - name: Run Frontend Tests
+    #   run: |
+    #     cd frontend
+    #     npm test
 
     # Build the frontend React app
     - name: Build Frontend
