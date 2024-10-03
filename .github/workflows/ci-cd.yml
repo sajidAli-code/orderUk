@@ -1,0 +1,67 @@
+name: CI/CD for MERN App
+
+# Controls when the action will run
+on:
+  push:
+    branches:
+      - main  # Run workflow when pushing to the main branch
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:4.2
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+    # Checkout the repository code
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Setup Node.js environment
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    # Install dependencies for both frontend and backend
+    - name: Install dependencies for backend
+      run: |
+        cd backend
+        npm install
+
+    - name: Install dependencies for frontend
+      run: |
+        cd frontend
+        npm install
+
+    # Run tests (Optional step for testing backend and frontend)
+    - name: Run Backend Tests
+      run: |
+        cd backend
+        npm test
+
+    - name: Run Frontend Tests
+      run: |
+        cd frontend
+        npm test
+
+    # Build the frontend React app
+    - name: Build Frontend
+      run: |
+        cd frontend
+        npm run build
+
+    # Deploy steps (add a deployment script for your environment)
+    # Example for deploying to Heroku or other platforms
