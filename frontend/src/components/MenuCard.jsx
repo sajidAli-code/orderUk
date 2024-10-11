@@ -11,7 +11,7 @@ const MenuCard = ({ foodItem }) => {
         <div className="max-w-sm px-6 py-4 bg-white rounded-lg shadow-lg">
             <div className="flex justify-between items-start flex-row gap-2">
                 {/* Left Section - Text */}
-                <div className=" w-1/2 flex flex-col justify-between gap-4">
+                <div className="w-1/2 flex flex-col justify-between gap-4">
                     <h3 className="text-sm font-semibold text-gray-950">{foodItem?.name}</h3>
                     <div className="mt-2 text-xs text-gray-600">
                         {foodItem?.introPara}
@@ -20,12 +20,12 @@ const MenuCard = ({ foodItem }) => {
                 </div>
 
                 {/* Right Section - Image */}
-                <div className=" w-1/2">
+                <div className="w-1/2">
                     <div className="relative">
                         <img
-                            src={foodItem?.imageSrc || '/images/burgerDeal1.png'}
+                            src={foodItem?.imgSrc}
                             alt={foodItem?.name}
-                            className="rounded-md w-44 h-full object-cover"
+                            className="rounded-md w-full h-44 object-cover" // Fix image size and aspect ratio
                         />
                         <div className="absolute inset-0 flex items-end justify-end bg-black bg-opacity-25 rounded-md">
                             <button

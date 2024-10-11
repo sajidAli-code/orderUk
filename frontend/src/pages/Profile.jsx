@@ -1,5 +1,6 @@
 import { jwtDecode } from 'jwt-decode';
 import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 
 const Profile = () => {
     const [orders, setOrders] = useState([])
@@ -35,26 +36,28 @@ const Profile = () => {
         }
         fetchOrders()
     }, [])
+    const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     var total = 0;
-    //     orders.map((order) => {
-    //         order?.productList?.map((product) => {
-    //             total += product?.amount_total / 100
-    //         })
-    //     })
-    //     console.log(total)
-    // }, [orders])
+    const handleLogout = () => {
+        try {
+            // Redirect to the home page
+            navigate('/');
+
+            // Remove session from localStorage or sessionStorage
+            localStorage.removeItem('authToken'); // or sessionStorage.removeItem('authToken');
+
+        } catch (error) {
+            console.error('Logout failed', error);
+        }
+    };
 
     var total = 0;
-
-
     return (
         <>
             <div className="grid grid-cols-3 grid-rows-1 gap-4 w-[90%] h-[100vh]">
                 <div>
                     <div className="flex flex-col justify-center items-center">
-                        <div className="relative flex flex-col items-center rounded-[20px] w-[400px] mx-auto p-4 bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none">
+                        <div className="relative flex flex-col items-center rounded-[20px] w-[400px] mx-auto bg-white bg-clip-border shadow-3xl shadow-shadow-500 border border-gray-200">
                             <div className="relative flex h-32 w-full justify-center rounded-xl bg-cover" >
                                 <img src='/images/gradientBg.jpg' className="absolute flex h-32 w-full justify-center rounded-xl bg-cover" />
                                 <div className="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400 dark:!border-navy-700">
@@ -85,14 +88,20 @@ const Profile = () => {
                                     <p className="text-sm font-normal text-gray-600">Pending</p>
                                 </div>
                             </div>
+                            <button
+                                className=' px-4 py-2 border border-orange-500 rounded-full mb-4 hover:bg-orange-500 hover:text-white'
+                                onClick={handleLogout}
+                            >
+                                Logout
+                            </button>
                         </div>
                     </div>
                 </div>
                 <div className="col-span-2 h-full overflow-y-scroll w-full flex flex-col gap-2">
                     {
-                        orders?.map((order) => (
+                        orders.length > 0 ? orders.map((order) => (
                             <div
-                                key={order?.id}
+                                key={order?._id}
                                 className=" w-full border border-gray-300 rounded-lg max-w-3xl mx-auto"
                             >
                                 {/* Top section */}
@@ -116,9 +125,12 @@ const Profile = () => {
                                         </p>
                                     </div>
                                     <div>
-                                        <button className="border border-gray-300 px-4 py-2 rounded-lg text-sm font-semibold text-gray-700">
+                                        <Link
+                                            to={`/trackOrder/${order?._id}`}
+                                            className="border border-gray-300 px-4 py-2 rounded-lg text-sm font-semibold text-gray-700"
+                                        >
                                             Track Order
-                                        </button>
+                                        </Link>
                                     </div>
                                 </div>
 
@@ -161,7 +173,10 @@ const Profile = () => {
                                                                 d="M5 13l4 4L19 7"
                                                             />
                                                         </svg>
-                                                        <p className="ml-2 text-gray-600 text-sm">Delivered on Jun 16, 2022</p>
+                                                        <p className="ml-2 text-gray-400 text-sm">
+                                                            <span className=' font-semibold text-gray-500'>Delivery Status: </span>
+                                                            {order?.orderStatus}
+                                                        </p>
                                                     </div>
                                                     <div>
                                                         <button className="text-orange-500 text-sm font-semibold ml-4">Buy Again</button>
@@ -173,7 +188,18 @@ const Profile = () => {
                                 </ul>
                             </div>
 
-                        ))
+                        )) :
+                            (
+                                <div className=' flex justify-between items-center flex-col space-y-4 mt-16'>
+                                    <p className=' text-2xl font-bold text-gray-400'>No orders placed!</p>
+                                    <Link
+                                        className=' px-4 py-2 border border-orange-500 rounded-full hover:bg-orange-500 hover:text-white'
+                                        to="/"
+                                    >
+                                        Continue Shopping
+                                    </Link>
+                                </div>
+                            )
                     }
                 </div>
             </div >

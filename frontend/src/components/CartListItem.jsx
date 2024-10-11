@@ -18,8 +18,6 @@ const OrderList = () => {
         0
     );
 
-    console.log(cart)
-
     const handleProceedCheckout = async () => {
         const token = localStorage.getItem('authToken');
 
