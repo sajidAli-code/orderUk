@@ -20,7 +20,7 @@
 | ------------- | ------------ | --------- | --------------- |
 | ReactJS       | Node.js      | MongoDB   | Mapbox          |
 | Tailwind CSS  | Express      |           | Google Maps     |
-| Vite          |              |           | Stripe, JazzCash|
+| Vite          |              |           | Stripe|
 
 ---
 
