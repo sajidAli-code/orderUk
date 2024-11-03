@@ -7,12 +7,11 @@ import FAQ from './components/FAQ';
 import StatsBanner from './components/StatsBanner';
 import Footer from './components/Footer';
 import UserAuth from './pages/UserAuth';
-import { useEffect } from 'react';
 import Login from './pages/Login';
-import PaymentForm from './components/PaymentForm';
 import PaymentSuccess from './components/PaymentSuccess';
 import PaymentCancelled from './components/PaymentCancelled';
 import Profile from './pages/Profile';
+import TrackOrder from './pages/TrackOrder';
 
 const App = () => {
   const location = useLocation();
@@ -33,6 +32,7 @@ const App = () => {
           <Route path="/success" element={<PaymentSuccess />} />
           <Route path="/cancel" element={<PaymentCancelled />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/trackOrder/:id" element={<TrackOrder />} />
         </Routes>
         {/* Only show FAQ, StatsBanner, and Footer when not on the userAuth page */}
         {!isAuthPage && <FAQ />}

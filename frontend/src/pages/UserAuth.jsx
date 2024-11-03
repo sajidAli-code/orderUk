@@ -1,12 +1,14 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const UserAuth = () => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [message, setMessage] = useState("")
+
+    const navigate = useNavigate();
 
     const handleFormSubmition = (e) => {
         e.preventDefault()
@@ -28,6 +30,9 @@ const UserAuth = () => {
                         setName("")
                         setEmail("")
                         setPassword("")
+                        setTimeout(() => {
+                            navigate('/userAuth/login');
+                        }, 5000);
                     }
                 })
                 .catch((error) => {

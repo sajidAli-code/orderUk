@@ -6,11 +6,15 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
+const axios = require('axios');
+
+const http = require('http');
+const socketIo = require('socket.io');
 
 require('dotenv').config();  // for environment variables
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-const endpointSecret = "whsec_e3d35b6a16da614c232556ede7dbbda650285cf6019bacc68b3da7c091cb852d";
+const endpointSecret = process.env.STRIPE_ENDPOINT_SECRET;
 
 // models importing
 const Category = require('./models/Category');
@@ -20,6 +24,14 @@ const Order = require('./models/Order')
 
 // Create an Express application
 const app = express();
+
+const server = http.createServer(app);
+const io = socketIo(server, {
+    cors: {
+        origin: '*',
+        methods: ['GET', 'POST'],
+    },
+});
 
 // Middleware
 app.use(cors());               // Enable CORS
@@ -228,8 +240,64 @@ app.get('/getOrder/:id', async (req, res) => {
     }
 });
 
+app.get('/getOrderById/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const results = await Order.find({ _id: id });
+        res.status(200).send(results);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('An error occurred');
+    }
+});
+
+// Route to handle address geocoding
+app.post('/geocode', async (req, res) => {
+    const address = req.body.address; // Extracting address from frontend request
+
+    const options = {
+        method: 'GET',
+        url: 'https://google-map-places.p.rapidapi.com/maps/api/geocode/json',
+        params: {
+            address: address,
+            language: 'en',
+            region: 'en',
+            result_type: 'administrative_area_level_1',
+            location_type: 'ROOFTOP' // Set for precise location
+        },
+        headers: {
+            'x-rapidapi-key': 'c17f4fede8msh22c601ce2db2ebep140947jsn22a8028e2300',
+            'x-rapidapi-host': 'google-map-places.p.rapidapi.com'
+        }
+    };
+
+    try {
+        const response = await axios.request(options);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error making API request:', error);
+        res.status(500).json({ error: 'API request failed' });
+    }
+});
+
+// Socket.IO
+io.on('connection', (socket) => {
+    console.log('New client connected');
+
+    // Listen for location updates from the client
+    socket.on('updateLocation', (data) => {
+        console.log('Received location update:', data);
+        // Broadcast the location to all clients
+        io.emit('locationUpdate', data);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('Client disconnected');
+    });
+});
+
 // Server Setup
 const port = process.env.PORT || 3300;  // Use port from environment or default to 5000
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });

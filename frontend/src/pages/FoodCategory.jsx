@@ -1,16 +1,21 @@
-import React, { useEffect, useState } from 'react'
-import FoodHero from '../components/FoodHero'
-import MenuCardContainer from '../components/MenuCardContainer'
+import React, { useEffect, useState } from 'react';
+import FoodHero from '../components/FoodHero';
+import MenuCardContainer from '../components/MenuCardContainer';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
 const FoodCategory = () => {
-  const { id } = useParams()
+  const { id } = useParams();
 
   const [foods, setFoods] = useState([]); // Initialize with an empty array
   const [foodMainType, setFoodMainType] = useState();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Scroll to top when the component is mounted
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     axios.get(`http://localhost:3300/get_foods_groups/${id}`)
@@ -27,14 +32,14 @@ const FoodCategory = () => {
         setError(error); // Handle error
         setLoading(false); // Stop loading even if there's an error
       });
-  }, []);
+  }, [id]); // Add id as dependency to refetch on category change
 
   useEffect(() => {
     axios.get(`http://localhost:3300/get_categories_by_id/${id}`)
       .then((response) => {
         // Check if response.data is defined and an array
         if (response.data) {
-          console.log(response.data)
+          console.log(response.data);
           setFoodMainType(response.data); // Populate the state
         } else {
           throw new Error('Unexpected data format');
@@ -45,7 +50,7 @@ const FoodCategory = () => {
         setError(error); // Handle error
         setLoading(false); // Stop loading even if there's an error
       });
-  }, []);
+  }, [id]); // Add id as dependency to refetch on category change
 
 
   return (
@@ -62,7 +67,7 @@ const FoodCategory = () => {
         ))
       }
     </>
-  )
-}
+  );
+};
 
-export default FoodCategory
+export default FoodCategory;
