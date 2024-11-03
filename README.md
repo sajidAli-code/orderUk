@@ -44,10 +44,14 @@ To run this project, you will need to add the following environment variables to
 
 To install dependencies for the backend and frontend, run the following commands:
 
-# Move to backend folder and install backend dependencies
+**Move to backend folder and install backend dependencies**
+
 cd backdend
+
 npm install
 
-# Move to frontend folder and install frontend dependencies
+**Move to frontend folder and install frontend dependencies**
+
 cd frontend
+
 npm install
